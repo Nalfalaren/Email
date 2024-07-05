@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="inbox">
+        <nav>
+            <div class="user" style="display: flex; gap: 1rem; align-items: center;">
+                <span>Welcome <span style="color:rgb(199, 19, 19)"><%= fullName %><span></span>
+                <a href="/signout">Log out</a>
+            </div>
+        </nav>
+        <div class="left-side">
+            <ul>
+                <li id="inbox"><a href="/inbox">Inbox</a></li>
+                <li id="compose"><a href="/compose">Compose</a></li>
+                <li id="outbox"><a href="/outbox">Outbox</a></li>
+            </ul>
+        </div>
+        <div class="inbox-content">
+            <div class="inbox-wrapper">
+                <% if(messages.length> 0) { %>
+                    <form action="/inbox/:id" method="GET">
+                        <% messages.map((row)=> { %>
+                            <div class="inbox-b" id="email<%= row.idMessage %>">
+                            <div class="inbox-box">
+                                <div class="inbox-header" style="display: flex; flex-direction: row; gap: .5rem">
+                                    <input type="checkbox" name="checkbox" id=<%=row.idMessage %>>
+                                    <span class="email-sender">
+                                        <%= row.senderFullName %>
+                                    </span>
+                                </div>
+                                <a href="/inbox/<%= row.idMessage %>">
+                                    <% if(row.messageTitle) { %>
+                                        <%= row.messageTitle %>
+                                            <% } else { %>
+                                                <span>No body</span>
+                                                <% } %>
+                                </a>
+                                <span>
+                                    <%= row.messageDate %>
+                                </span>
+                            </div>
+                             <hr></hr>
+                            </div>
+                            <% }) %>
+                                <button id="delete-button" type="submit">Delete button</button>
+                    </form>
+                    <% } else { %>
+                        <span class="no-message" style="font-weight: bold; text-align: center; font-size: 2rem;">No
+                            message found!</span>
+                        <% } %>
+                            <div class="pagination">
+                                <% for (let i=1; i <=totalPages; i++) { %>
+                                    <a href="/inbox?page=<%= i %>&limit=5" class="pagination-link">
+                                        <p>
+                                            <%= i %>
+                                        </p>
+                                    </a>
+                                    <% } %>
+                            </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial;
+    }
+
+    nav,
+    ul {
+        background-color: aliceblue;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    nav{
+        padding: 2rem;
+    }
+    
+    ul{
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        background-color: aliceblue;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 4rem;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        width: 20%;
+        height: 100%;
+    }
+
+    hr {
+        margin: .5rem 0;
+    }
+
+    li {
+        list-style: none;
+        font-size: 1.5rem;
+        padding: 2rem;
+        transition: 0.3s background-color ease-in;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+    }
+
+    li:hover {
+        background-color: rgb(175, 61, 61);
+        color: white;
+    }
+
+    .inbox-wrapper {
+        position: absolute;
+        width: 70%;
+        top: 50%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        font-weight: bold;
+        font-size: 0.8rem;
+        padding: .5rem 3rem;
+        background-color: #F3F3F3;
+        border: 2px solid #afadad;
+        margin-top: 2rem;
+    }
+
+    .inbox-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding: .5rem;
+    }
+
+    span,
+    a {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .pagination {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        font-size: 1rem;
+    }
+
+    .pagination-link {
+        transition: .3s background-color ease;
+    }
+
+    .pagination-link:hover {
+        background-color: orange;
+    }
+
+    /* input{
+        display: none;
+    }
+    .visible{
+        display: block;
+    } */
+</style>
+
+<script>
+    document.querySelector('#delete-button').addEventListener('click', function (event) {
+        event.preventDefault();
+        let checkboxes = document.querySelectorAll('input[name="checkbox"]:checked');
+        let ids = Array.from(checkboxes).map(checkbox => checkbox = checkbox.id);
+        ids.forEach(id => {
+            fetch(`/inbox/${id}`, { method: 'DELETE' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    let emailElement = document.getElementById(`email${id}`);
+                    emailElement.parentNode.removeChild(emailElement);
+                })
+                .catch(error => {
+                    console.log();
+                    console.error('There was an error!', error);
+                });
+        });
+    });
+</script>
+
+</html>

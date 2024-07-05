@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="compose">
+        <h1>Add new letter</h1>
+        <a href="/inbox" class="link-inbox">Back to inbox</a>
+        <br>
+        <div class="compose-form">
+            <form action="/compose" method="POST" enctype="multipart/form-data">
+                <label for="recipient">Recipient:</label>
+                <select name="receiver">
+                    <option name="select" value="">Select recipient</option>
+                    <% if(rows.length> 0) { %>
+                        <% rows.forEach((row)=> { %>
+                            <option name="receiver" value=<%=row.userID %>><%= row.fullName %>
+                            </option>
+                            <% }) %>
+                </select>
+                <% } %>
+                    <label for="subject">E-mail subject:</label>
+                    <input name="subject" placeholder="(no subject)" type="text"></input>
+                    <label for="email-content">Email's body:</label>
+                    <textarea name="emailContent"></textarea>
+                    <label for="file">Input file here!</label>
+                    <input type="file" id="fileUpload" name="file">
+                    <% if(Object.keys(errors).length> 0) { %>
+                        <span style="color: red; font-weight: bold; text-align: center; font-size: 1.5rem;">
+                            <%= errors.receiver %>
+                        </span>
+                        <% } else { %>
+                            <span class="success"
+                                style="color: green; font-weight: bold; text-align: center; font-size: 1.5rem;">
+                                <%= success %>
+                            </span>
+                            <% } %>
+                                <button type="submit">Send message!</button>
+            </form>
+
+        </div>
+    </div>
+</body>
+<style>
+    * {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    h1 {
+        font-weight: bold;
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .link-inbox {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-left: 2rem;
+    }
+
+    .compose-form {
+        margin: 0 auto 4em;
+        width: 80%;
+        background-color: #F3F3F3;
+        border: 2px solid #afadad;
+        margin-top: 2rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem;
+        gap: 1rem;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    select,
+    option {
+        padding: .5rem;
+        width: 20%;
+    }
+
+    input {
+        padding: .5rem;
+    }
+
+    textarea {
+        height: 12rem;
+        padding: .5rem;
+    }
+
+    button {
+        padding: 1rem;
+        background-color: green;
+        border: 1px solid #afadad;
+        color: white;
+        font-size: 1.5rem;
+    }
+</style>
+
+</html>

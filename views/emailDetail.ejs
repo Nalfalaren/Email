@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Detail</title>
+</head>
+
+<body>
+    <div class="email-detail">
+            <% message.forEach((row) => { %>
+                <div class="email-header">
+                    <span class="email-fullName">
+                        <%= row.receiverFullName %>
+                    </span>
+                    <span>
+                        <%= row.messageDate %>
+                    </span>
+                </div>
+                <div class="email-subject">
+                    <span><%= row.messageTitle %></span>
+                </div>
+                <div class="email-content">
+                    <span><%= row.messageContent %></span>
+                </div>
+                <% if(row.fileReceive !== 'no file') { %>
+                    <a download href="/<%= row.fileReceive %>" style="text-decoration: none; font-weight: bold; font-size: 1.2rem; padding: 1rem 0;">File: <%= row.fileReceive %></a>
+                    <% } else { %>
+                    <span></span>
+                    <% } %>
+            <% }) %>
+</body>
+
+<style>
+    .email-detail{
+        font-family: Arial, Helvetica, sans-serif;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        font-weight: 1.1rem;
+        gap: 2rem;
+        background-color: #f3f3f3;
+        border: 1px solid rgb(102, 99, 99);
+        padding: 1rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .email-fullName{
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+    .email-header{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .email-subject, .email-content{
+        background-color: white;
+        padding: 1rem;
+        border: 1px solid rgb(177, 176, 176);
+    }
+
+    .email-content{
+        padding-bottom: 12rem;
+    }
+
+</style>
+</html>
